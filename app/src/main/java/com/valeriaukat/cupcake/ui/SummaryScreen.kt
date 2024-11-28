@@ -1,29 +1,19 @@
-package com.valeriaukat.cupcake.ui
+package com.valeriaukat.cupcake.ui 
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import com.valeriaukat.cupcake.R
-import com.valeriaukat.cupcake.data.OrderUiState
-import com.valeriaukat.cupcake.ui.components.FormattedPriceLabel
-import com.valeriaukat.cupcake.ui.theme.CupcakeTheme
+import androidx.compose.foundation.layout.* 
+import androidx.compose.material3.* 
+import androidx.compose.runtime.Composable 
+import androidx.compose.ui.Alignment 
+import androidx.compose.ui.Modifier 
+import androidx.compose.ui.platform.LocalContext 
+import androidx.compose.ui.res.dimensionResource 
+import androidx.compose.ui.res.stringResource 
+import androidx.compose.ui.text.font.FontWeight 
+import androidx.compose.ui.tooling.preview.Preview 
+import com.valeriaukat.cupcake.R 
+import com.valeriaukat.cupcake.data.OrderUiState 
+import com.valeriaukat.cupcake.ui.components.FormattedPriceLabel 
+import com.valeriaukat.cupcake.ui.theme.CupcakeTheme 
 
 /**
  * This composable expects [orderUiState] that represents the order state, [onCancelButtonClicked]
@@ -31,20 +21,22 @@ import com.valeriaukat.cupcake.ui.theme.CupcakeTheme
  * lambda
  */
 @Composable
-fun OrderSummaryScreen(
-    orderUiState: OrderUiState,
-    onCancelButtonClicked: () -> Unit,
-    onSendButtonClicked: (String, String) -> Unit,
-    modifier: Modifier = Modifier
+fun OrderSummaryScreen( // Fungsi komposisi untuk layar ringkasan pesanan
+    orderUiState: OrderUiState, // Parameter untuk state pesanan
+    onCancelButtonClicked: () -> Unit, // Lambda untuk menangani klik tombol batal
+    onSendButtonClicked: (String, String) -> Unit, // Lambda untuk menangani klik tombol kirim
+    modifier: Modifier = Modifier // Parameter untuk Modifier, default ke Modifier kosong
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalContext.current.resources // Mendapatkan resources dari konteks lokal
 
+    // Mengambil dan memformat string jumlah cupcake berdasarkan opsi yang dipilih
     val numberOfCupcakes = resources.getQuantityString(
         R.plurals.cupcakes,
         orderUiState.quantity,
         orderUiState.quantity
     )
-    //Load and format a string resource with the parameters.
+
+    // Memformat ringkasan pesanan dengan parameter yang relevan
     val orderSummary = stringResource(
         R.string.order_details,
         numberOfCupcakes,
@@ -52,68 +44,66 @@ fun OrderSummaryScreen(
         orderUiState.date,
         orderUiState.quantity
     )
-    val newOrder = stringResource(R.string.new_cupcake_order)
-    //Create a list of order summary to display
+    val newOrder = stringResource(R.string.new_cupcake_order) // String untuk pesanan baru
+
+    // Membuat daftar ringkasan pesanan untuk ditampilkan
     val items = listOf(
-        // Summary line 1: display selected quantity
-        Pair(stringResource(R.string.quantity), numberOfCupcakes),
-        // Summary line 2: display selected flavor
-        Pair(stringResource(R.string.flavor), orderUiState.flavor),
-        // Summary line 3: display selected pickup date
-        Pair(stringResource(R.string.pickup_date), orderUiState.date)
+        Pair(stringResource(R.string.quantity), numberOfCupcakes), // Menampilkan jumlah cupcake
+        Pair(stringResource(R.string.flavor), orderUiState.flavor), // Menampilkan rasa cupcake
+        Pair(stringResource(R.string.pickup_date), orderUiState.date) // Menampilkan tanggal pengambilan
     )
 
-    Column(
+    Column( // Mengatur layout kolom untuk ringkasan pesanan
         modifier = modifier,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.SpaceBetween // Mengatur ruang vertikal antar elemen
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)), // Kolom untuk detail pesanan
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)) // Mengatur jarak antar elemen
         ) {
-            items.forEach { item ->
-                Text(item.first.uppercase())
-                Text(text = item.second, fontWeight = FontWeight.Bold)
-                Divider(thickness = dimensionResource(R.dimen.thickness_divider))
+            items.forEach { item -> // Mengulangi setiap item dalam daftar ringkasan
+                Text(item.first.uppercase()) // Menampilkan label dalam huruf kapital
+                Text(text = item.second, fontWeight = FontWeight.Bold) // Menampilkan nilai dengan berat font tebal
+                Divider(thickness = dimensionResource(R.dimen.thickness_divider)) // Menambahkan pemisah
             }
-            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small)))
-            FormattedPriceLabel(
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_small))) // Menambahkan spasi
+            FormattedPriceLabel( // Menampilkan label harga yang diformat
                 subtotal = orderUiState.price,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End) // Menyelaraskan ke akhir
             )
         }
-        Row(
+        Row( // Mengatur layout baris untuk tombol
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small))
+            Column( // Kolom untuk menampilkan tombol
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_small)) // Mengatur jarak antar tombol
             ) {
-                Button(
+                Button( // Tombol untuk mengirim pesanan
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onSendButtonClicked(newOrder, orderSummary) }
+                    onClick = { onSendButtonClicked(newOrder, orderSummary) } // Menangani klik tombol kirim
                 ) {
-                    Text(stringResource(R.string.send))
+                    Text(stringResource(R.string.send)) // Menampilkan teks untuk tombol kirim
                 }
-                OutlinedButton(
+                OutlinedButton( // Tombol batal dengan outline
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = onCancelButtonClicked
+                    onClick = onCancelButtonClicked // Menangani klik tombol batal
                 ) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(R.string.cancel)) // Menampilkan teks untuk tombol batal
                 }
             }
         }
     }
 }
 
-@Preview
+@Preview // Anotasi untuk menampilkan preview komposisi
 @Composable
-fun OrderSummaryPreview() {
-    CupcakeTheme {
-        OrderSummaryScreen(
-            orderUiState = OrderUiState(0, "Test", "Test", "$300.00"),
-            onSendButtonClicked = { subject: String, summary: String -> },
-            onCancelButtonClicked = {},
-            modifier = Modifier.fillMaxHeight()
+fun OrderSummaryPreview() { // Fungsi untuk preview layar ringkasan pesanan
+    CupcakeTheme { // Mengaplikasikan tema cupcake
+        OrderSummaryScreen( // Memanggil komposisi untuk menampilkan ringkasan pesanan
+            orderUiState = OrderUiState(0, "Test", "Test", "$300.00"), // Menetapkan state pesanan untuk preview
+            onSendButtonClicked = { subject: String, summary: String -> }, // Lambda kosong untuk preview
+            onCancelButtonClicked = {}, // Lambda kosong untuk preview
+            modifier = Modifier.fillMaxHeight() // Mengatur modifier untuk mengisi tinggi maksimum
         )
     }
 }
